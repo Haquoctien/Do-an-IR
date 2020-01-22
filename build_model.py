@@ -38,7 +38,7 @@ vectorizer = TfidfVectorizer(preprocessor=prep, tokenizer=tokenize,
                              analyzer='word', max_df=0.7, norm='l2',
                              use_idf=True, smooth_idf=True, sublinear_tf=True)
 matrix = vectorizer.fit_transform(corpus.values())
-#
+# convert corpus into dataframe
 import pandas as pd
 data = pd.DataFrame.from_dict(corpus, orient='index', columns=['text'])
 # save trained vectorizer and matrix
