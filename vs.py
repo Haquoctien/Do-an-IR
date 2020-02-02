@@ -58,7 +58,7 @@ class VectorSpaceIRModel():
         ind = self._search(query, topN)
         return self.data.iloc[ind]
     
-    def expandQuery(self, query):
+    def reformulateQuery(self, query):
         '''
         query: string contains query
         -> reformulated query vector of type np.array
@@ -69,7 +69,7 @@ class VectorSpaceIRModel():
         newQueryVector = q + relevantVector
         return newQueryVector
     
-    def searchWithExpandedQuery(self, query, topN):
+    def searchWithReformulatedQuery(self, query, topN):
         '''
         query: string contains query
         topN: int number of top ranking results to return
