@@ -78,3 +78,22 @@ class VectorSpaceIRModel():
         '''
         newQueryVector = self.expandQuery(query)
         return self.data.iloc[self._search(newQueryVector, topN)]
+    def expandQuery(self, query):
+        '''
+        '''
+        q = self.vectorizer.transform([query])
+        topTen = self.matrix[self._search(q, 10)]
+        ind = []
+        for doc in topTen:
+            ind = np.append(ind,
+                    np.argpartition(np.array(doc.todense())[0], -3)[-3:])
+        ind = np.unique(ind)
+        relevantVector = np.zeros_like(np.array(q.todense())[0])
+        relevantVector[np.asanyarray(ind, dtype=int)] = 1
+        relevantTerms = self.vectorizer.inverse_transform(relevantVector)
+        expandedTerms = np.unique(np.append(
+                                    self.vectorizer.tokenizer(query),relevantTerms))
+        expandedQuery = ' '.join(expandedTerms)
+        return expandedQuery
+        
+        
