@@ -11,14 +11,14 @@ import pickle
 
 # tokenizer
 from underthesea import word_tokenize
-def tokenize(text):
-    return word_tokenize(text)
 
 # preprocessing
 import string
+inchar = '#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~\t\n\r\x0b\x0c' + '“”'
+outchar = ' '*len(inchar)
+translation = str.maketrans(inchar, outchar)
 def prep(text):
-    text = text.replace('\n', ' ').strip(string.punctuation + "“”")
-    translation =str.maketrans('', '', string.punctuation + '“”')
+    text = text.replace(string.punctuation + "“”" + '\n', ' ')
     text = text.translate(translation).lower()
     return text
 
