@@ -37,8 +37,8 @@ class VectorSpaceIRModel():
             
     def _search(self, query, topN):
         '''
-        query: string contains query
-        topN: int number of top ranking results to return
+        query: csr sparse matrix, query vector
+        topN: int, number of top ranking results to return
         -> indices of top ranking results in corpus
         '''
         distances = linear_kernel(self.matrix, query)
@@ -49,8 +49,8 @@ class VectorSpaceIRModel():
     
     def search(self, query, topN):
         '''
-        query: string contains query
-        topN: int number of top ranking results to return
+        query: string, contains query
+        topN: int, number of top ranking results to return
         -> top ranking results of type pandas.DataFrame, index is doc id,
         one collumn 'text' contains doc's text
         '''
@@ -58,7 +58,7 @@ class VectorSpaceIRModel():
         ind = self._search(query, topN)
         return self.data.iloc[ind]
     
-    def reformulateQuery(self, query):
+    def reweightQuery(self, query):
         '''
         query: string contains query
         -> reformulated query vector of type np.array
@@ -69,14 +69,14 @@ class VectorSpaceIRModel():
         newQueryVector = q + relevantVector
         return newQueryVector
     
-    def searchWithReformulatedQuery(self, query, topN):
+    def searchWithReweightedQuery(self, query, topN):
         '''
-        query: string contains query
-        topN: int number of top ranking results to return
+        query: string, contains query
+        topN: int, number of top ranking results to return
         -> top ranking results of type pandas.DataFrame, index is doc id,
         one collumn 'text' contains doc's text
         '''
-        newQueryVector = self.reformulateQuery(query)
+        newQueryVector = self.reweightQuery(query)
         return self.data.iloc[self._search(newQueryVector, topN)]
     
     def expandQuery(self, query):
@@ -94,5 +94,13 @@ class VectorSpaceIRModel():
                                     self.vectorizer.tokenizer(query),relevantTerms))
         expandedQuery = ' '.join(expandedTerms)
         return expandedQuery
+    
+    def searchWithExpandedQuery(self, query, topN):
+        '''
+        '''
+        new_query = self.expandQuery(query)
+        new_query = self.vectorizer.transform([query])
+        ind = self._search(new_query, topN)
+        return self.data.iloc[ind]
         
         
