@@ -79,8 +79,10 @@ class VectorSpaceIRModel():
         newQueryVector = self.reweightQuery(query)
         return self.data.iloc[self._search(newQueryVector, topN)]
     
-    def expandQuery(self, query):
+    def expandQuery(self, query)ing:
         '''
+        query: string contains query
+        -> expanded query vector of type string
         '''
         q = self.vectorizer.transform([query])
         topTen = self.matrix[self._search(q, 10)]
@@ -97,6 +99,10 @@ class VectorSpaceIRModel():
     
     def searchWithExpandedQuery(self, query, topN):
         '''
+        query: string, contains query
+        topN: int, number of top ranking results to return
+        -> top ranking results of type pandas.DataFrame, index is doc id,
+        one collumn 'text' contains doc's text
         '''
         new_query = self.expandQuery(query)
         new_query = self.vectorizer.transform([query])
