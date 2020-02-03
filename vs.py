@@ -76,8 +76,9 @@ class VectorSpaceIRModel():
         -> top ranking results of type pandas.DataFrame, index is doc id,
         one collumn 'text' contains doc's text
         '''
-        newQueryVector = self.expandQuery(query)
+        newQueryVector = self.reformulateQuery(query)
         return self.data.iloc[self._search(newQueryVector, topN)]
+    
     def expandQuery(self, query):
         '''
         '''
@@ -87,10 +88,8 @@ class VectorSpaceIRModel():
         for doc in topTen:
             ind = np.append(ind,
                     np.argpartition(np.array(doc.todense())[0], -3)[-3:])
-        ind = np.unique(ind)
-        relevantVector = np.zeros_like(np.array(q.todense())[0])
-        relevantVector[np.asanyarray(ind, dtype=int)] = 1
-        relevantTerms = self.vectorizer.inverse_transform(relevantVector)
+        ind = np.asanyarray(ind, dtype=int)
+        relevantTerms = np.array(self.vectorizer.get_feature_names())[ind]
         expandedTerms = np.unique(np.append(
                                     self.vectorizer.tokenizer(query),relevantTerms))
         expandedQuery = ' '.join(expandedTerms)
