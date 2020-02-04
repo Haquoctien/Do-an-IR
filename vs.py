@@ -79,7 +79,7 @@ class VectorSpaceIRModel():
         newQueryVector = self.reweightQuery(query)
         return self.data.iloc[self._search(newQueryVector, topN)]
     
-    def expandQuery(self, query)ing:
+    def expandQuery(self, query):
         '''
         query: string contains query
         -> expanded query vector of type string
